@@ -3,29 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reparación de Computadoras | Servicio  Especializado</title>
+    <title>Reparación de Computadoras | Servicio Especializado</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         :root { --azul: #0d47a1; --celeste: #2196f3; --gris: #f5f5f5; --oscuro: #263238; }
         body { line-height: 1.6; color: #333; }
 
-        /* Navegación */
-        nav { background: var(--oscuro); padding: 1rem 5%; position: sticky; top: 0; z-index: 100; }
-        nav ul { list-style: none; display: flex; flex-wrap: wrap; gap: 2rem; justify-content: center; }
-        nav a { color: white; text-decoration: none; font-weight: 500; transition: color 0.3s; }
-        nav a:hover { color: var(--celeste); }
+        /* BARRA SUPERIOR CON BOTÓN MENÚ */
+        .barra-superior {
+            background: var(--oscuro);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .logo {
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
 
-        
-        /* Cabecera CON IMAGEN DE FONDO */
+        /* BOTÓN DE LAS TRES RAYAS ☰ */
+        .boton-menu {
+            background: rgba(255,255,255,0.15);
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        .raya {
+            width: 22px;
+            height: 2px;
+            background: white;
+            transition: 0.3s;
+        }
+
+        /* MENÚ DESPLEGABLE */
+        .menu-oculto {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 280px;
+            height: 100vh;
+            background: var(--oscuro);
+            padding: 4rem 2rem;
+            transition: right 0.3s ease;
+            z-index: 999;
+        }
+        .menu-oculto.abierto {
+            right: 0;
+        }
+        .menu-oculto a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 1rem 0;
+            font-size: 1.1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .menu-oculto a:hover {
+            color: var(--celeste);
+        }
+
+        /* Fondo oscuro al abrir menú */
+        .capa-sombra {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            z-index: 998;
+        }
+        .capa-sombra.activa {
+            display: block;
+        }
+
+        /* CABECERA CON TU IMAGEN */
         .hero { 
-            /* ==== AQUÍ VA TU IMAGEN DE FONDO ==== */
             background: linear-gradient(rgba(13,71,161,0.85), rgba(33,150,243,0.75)), 
                         url('https://i.postimg.cc/vZTyt3Nx/IMG-9808.jpg') center/cover no-repeat fixed;
-            
             color: white; 
             padding: 6rem 5%; 
             text-align: center;
-            min-height: 100vh; /* Ocupa toda la pantalla */
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -33,55 +104,89 @@
         }
         .hero h1 { font-size: 2.5rem; margin-bottom: 1rem; }
         .hero p { font-size: 1.2rem; margin-bottom: 2rem; max-width: 800px; }
-        .btn { display: inline-block; background: #ff9800; color: white; padding: 0.8rem 2rem; border-radius: 50px; text-decoration: none; font-weight: bold; transition: transform 0.3s; }
+        .btn {
+            display: inline-block;
+            background: #ff9800;
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: transform 0.3s;
+        }
         .btn:hover { transform: scale(1.05); }
 
-
-        /* Secciones */
+        /* SECCIONES */
         section { padding: 3rem 5%; }
         h2 { text-align: center; color: var(--azul); margin-bottom: 2.5rem; font-size: 2rem; }
 
-        /* Servicios */
+        /* SERVICIOS */
         .servicios { background: var(--gris); }
-        .servicios-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
-        .servicio { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s; }
+        .servicios-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+        .servicio {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
         .servicio:hover { transform: translateY(-5px); }
         .servicio h3 { color: var(--celeste); margin: 1rem 0; }
-        /* Contacto */
+
+        /* CONTACTO */
         .contacto { background: var(--gris); }
         .contacto-info { max-width: 600px; margin: 0 auto; text-align: center; }
         .dato { margin: 1rem 0; font-size: 1.1rem; }
         .dato strong { color: var(--azul); }
 
-        /* Pie */
-        footer { background: var(--oscuro); color: white; text-align: center; padding: 2rem; margin-top: 2rem; }
+        /* PIE */
+        footer {
+            background: var(--oscuro);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
 
         @media (max-width: 600px) {
-            nav ul { gap: 1rem; }
             .hero h1 { font-size: 1.8rem; }
+            .menu-oculto { width: 100%; }
         }
     </style>
 </head>
 <body>
 
-<!-- Navegación -->
-<nav>
-    <ul>
-        <li><a href="#inicio">Inicio</a></li>
-        <li><a href="#servicios">Servicios</a></li>
-        <li><a href="#sobre">Sobre Mí</a></li>
-        <li><a href="#contacto">Contacto</a></li>
-    </ul>
-</nav>
+<!-- BARRA SUPERIOR CON BOTÓN ☰ -->
+<div class="barra-superior">
+    <div class="logo">🔧 Servicio Técnico PC</div>
+    <button class="boton-menu" id="botonMenu" aria-label="Menú">
+        <span class="raya"></span>
+        <span class="raya"></span>
+        <span class="raya"></span>
+    </button>
+</div>
 
-<!-- Cabecera -->
+<!-- MENÚ DESPLEGABLE — SIN "SOBRE MÍ" -->
+<nav class="menu-oculto" id="menuDesplegable">
+    <a href="#inicio">🏠 Inicio</a>
+    <a href="#servicios">🛠️ Servicios</a>
+    <a href="#contacto">📞 Contacto</a>
+</nav>
+<div class="capa-sombra" id="capaSombra"></div>
+
+<!-- INICIO -->
 <header class="hero" id="inicio">
     <h1>🔧 Reparación y Mantenimiento de Computadoras</h1>
     <p>Soluciones rápidas, confiables y a tu alcance. Reparación de equipos, instalación de sistemas, limpieza y mucho más.</p>
     <a href="#contacto" class="btn">Solicitar Servicio</a>
 </header>
 
-<!-- Servicios -->
+<!-- SERVICIOS -->
 <section class="servicios" id="servicios">
     <h2>🛠️ Mis Servicios</h2>
     <div class="servicios-grid">
@@ -102,31 +207,53 @@
             <p>Configuración de redes, instalación de módems, enrutadores y solución de problemas de conexión.</p>
         </div>
         <div class="servicio">
-            <h3>👨‍💻Creación de páginas web</h3>
-            <p>Tambien contamos con creación de páginas web para negocios, inventarios y publicidad digital para hacer crecer más tu negocio y darle un toque innovador .</p>
+            <h3>👨‍💻 Creación de Páginas Web</h3>
+            <p>También contamos con creación de páginas web para negocios, inventarios y publicidad digital para hacer crecer más tu negocio y darle un toque innovador.</p>
         </div>
     </div>
 </section>
 
-
-
-<!-- Contacto -->
+<!-- CONTACTO -->
 <section class="contacto" id="contacto">
     <h2>📞 Contacto</h2>
     <div class="contacto-info">
         <p class="dato"><strong>📍 Ubicación:</strong> Puebla, Puebla</p>
         <p class="dato"><strong>📱 Teléfono / WhatsApp:</strong> +52 2381263592</p>
-        <p class="dato"><strong>✉️ Correo:</strong>   serviciotecpc4@gmail.com</p>
-        <p class="dato"><strong>🕒 Horario:</strong> El horario es acordado, agenda tu cita y con gusto te hago tu diagnóstico y trabajo que requieras. 
+        <p class="dato"><strong>✉️ Correo:</strong> serviciotecpc4@gmail.com</p>
+        <p class="dato"><strong>🕒 Horario:</strong> El horario es acordado, agenda tu cita y con gusto te hago tu diagnóstico y trabajo que requieras.</p>
         <br>
         <p>¡Contáctame sin compromiso para cotizar tu servicio!</p>
     </div>
 </section>
 
-<!-- Pie de página -->
+<!-- PIE DE PÁGINA -->
 <footer>
     <p>&copy; 2026 Técnico en Computadoras. Todos los derechos reservados.</p>
 </footer>
+
+<!-- JAVASCRIPT DEL MENÚ -->
+<script>
+    const botonMenu = document.getElementById('botonMenu');
+    const menuDesplegable = document.getElementById('menuDesplegable');
+    const capaSombra = document.getElementById('capaSombra');
+
+    botonMenu.addEventListener('click', () => {
+        menuDesplegable.classList.toggle('abierto');
+        capaSombra.classList.toggle('activa');
+    });
+
+    capaSombra.addEventListener('click', () => {
+        menuDesplegable.classList.remove('abierto');
+        capaSombra.classList.remove('activa');
+    });
+
+    menuDesplegable.querySelectorAll('a').forEach(enlace => {
+        enlace.addEventListener('click', () => {
+            menuDesplegable.classList.remove('abierto');
+            capaSombra.classList.remove('activa');
+        });
+    });
+</script>
 
 </body>
 </html>
